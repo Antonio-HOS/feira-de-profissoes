@@ -38,6 +38,13 @@ float grausAcumulados = 0.0;
 
 const int delayPasso = 1000;
 
+void disparaFonte(int tempoMs);
+void disparaFonte();
+void girarGraus(float graus);
+void girar20Vezes();
+void girandoVolta();
+void reiniciarContador();
+
 
 //=================> SETUP
 
@@ -167,12 +174,21 @@ void girar20Vezes() {
 //=================> ACIONAR RELÉ
 
 void disparaFonte() {
+  disparaFonte(1000);
+}
+
+void disparaFonte(int tempoMs) {
+  if (tempoMs <= 0) {
+    tempoMs = 1000;
+  }
 
   digitalWrite(ledPin, LOW);
 
-  Serial.println("Rele ligado.");
+  Serial.print("Rele ligado por ");
+  Serial.print(tempoMs);
+  Serial.println(" ms.");
 
-  delay(1000);
+  delay(tempoMs);
 
   digitalWrite(ledPin, HIGH);
 
@@ -294,7 +310,15 @@ void loop() {
 
     else if (comando == "2") {
 
-      disparaFonte();
+      while (Serial.available() == 0);
+
+      int tempoMs = Serial.readStringUntil('\n').toInt();
+
+      if (tempoMs <= 0) {
+        tempoMs = 1000;
+      }
+
+      disparaFonte(tempoMs);
 
     }
 
